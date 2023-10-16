@@ -3,7 +3,7 @@ import numpy as np
 from qick import obtain
 from .asm_v1 import QickProgram, QickRegister, QickRegisterManagerMixin
 
-class ASMRAveragerProgram(QickProgram):
+class ASMProgram(QickProgram):
     """
     ASMRAveragerProgram class, do the same (or similar) experiment multiple .
     It is an abstract base class similar to the AveragerProgram, except has an outer loop which allows one to sweep a parameter in the real-time program rather than looping over it in software.  This can be more efficient for short duty cycles.
@@ -13,12 +13,13 @@ class ASMRAveragerProgram(QickProgram):
     :type cfg: dict
     """
 
-    def __init__(self, soccfg, cfg):
+    def __init__(self, soccfg, cfg, qasm):
         """
         Constructor for the RAveragerProgram, calls make program at the end so for classes that inherit from this if you want it to do something before the program is made and compiled either do it before calling this __init__ or put it in the initialize method.
         """
         super().__init__(soccfg)
         self.cfg = cfg
+        self.qasm = qasm
         self.make_program()
         self.soft_avgs = 1
         if "rounds" in cfg:
@@ -45,6 +46,9 @@ class ASMRAveragerProgram(QickProgram):
         Abstract method for updating the program
         """
         pass
+
+    def qasm2asm(self):
+        return 0
 
     def make_program(self):
         """
